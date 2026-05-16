@@ -39,3 +39,7 @@ if [[ "${RUN_SEG_CQ500_SLICE_HEAD:-0}" == "1" ]]; then
     --out-csv data/processed/slice_labels.csv
   python scripts/train_slice_head.py --config configs/vast/slice_head.yaml
 fi
+
+if [[ "${RUN_LORA_MIL:-0}" == "1" ]]; then
+  python scripts/train_lora_mil.py --config configs/vast/lora_mil.yaml
+fi

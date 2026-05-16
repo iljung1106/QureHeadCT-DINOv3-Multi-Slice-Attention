@@ -125,3 +125,15 @@ python scripts/train_slice_head.py --config configs/vast/slice_head.yaml
 
 This trains only a small binary head on cached frozen DINOv3 slice features. It does not train
 DINOv3 and it is independent of the BiGRU-GatedABMIL scan classifier.
+
+## LoRA MIL Model
+
+After the frozen baseline and Seg-CQ500 slice labels are prepared, train the main model with:
+
+```bash
+python scripts/train_lora_mil.py --config configs/vast/lora_mil.yaml
+```
+
+This trains DINOv3 LoRA adapters plus the BiGRU-GatedABMIL scan classifier. If
+`data/processed/slice_labels.csv` exists, it also applies a slice-level auxiliary hemorrhage loss
+only to truly labeled Seg-CQ500 slices.

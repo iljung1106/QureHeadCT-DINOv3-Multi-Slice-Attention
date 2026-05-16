@@ -79,6 +79,17 @@ Outputs:
 - `data/models/slice_hemorrhage_head/metrics.json`
 - `data/models/slice_hemorrhage_head/test_slice_predictions.csv`
 
+## LoRA MIL Training
+
+After the frozen baseline is reproducible:
+
+```bash
+python scripts/train_lora_mil.py --config configs/vast/lora_mil.yaml
+```
+
+If CUDA memory is tight, reduce `training.max_slices` or `training.slice_batch_size` in
+`configs/vast/lora_mil.yaml`.
+
 ## Notes
 
 - If VRAM is low, reduce feature extraction `--batch-size` to 8 or 16.

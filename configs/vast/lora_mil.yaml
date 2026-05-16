@@ -1,0 +1,51 @@
+seed: 42
+labels:
+  - ICH
+  - IPH
+  - IVH
+  - SDH
+  - EDH
+  - SAH
+  - MidlineShift
+  - MassEffect
+paths:
+  model_name_or_path: data/raw/hf/dinov3-vitb16-pretrain-lvd1689m
+  index_csv: data/processed/dicom_index_fast.csv
+  labels_csv: data/processed/labels_matched.csv
+  split_csv: splits/cq500_seed42.csv
+  slice_labels_csv: data/processed/slice_labels.csv
+  output_dir: data/models/lora_bigru_abmil
+model:
+  feature_dim: 768
+  hidden_dim: 256
+  gru_layers: 1
+  dropout: 0.25
+  attention_dim: 256
+  slice_head_hidden_dim: 0
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - query
+    - key
+    - value
+training:
+  epochs: 20
+  lr_head: 0.0002
+  lr_lora: 0.00001
+  weight_decay: 0.00001
+  grad_clip: 1.0
+  patience: 5
+  slice_batch_size: 16
+  max_slices: 96
+  grad_accum_steps: 1
+  scan_loss_weight: 1.0
+  slice_loss_weight: 0.3
+  use_scan_pos_weight: true
+  use_slice_pos_weight: true
+  amp: true
+
