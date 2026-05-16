@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+!.env.example
+data/raw/
+data/processed/
+data/features/
+data/models/
+data/reports/
+splits/*.csv
+wandb/
+*.log
+.ipynb_checkpoints/
