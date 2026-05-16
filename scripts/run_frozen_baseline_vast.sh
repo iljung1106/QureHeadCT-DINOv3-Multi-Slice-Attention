@@ -15,8 +15,8 @@ python scripts/make_patient_split.py \
   --labels-csv data/processed/labels_matched.csv \
   --out-csv splits/cq500_seed42.csv \
   --fixed-cases-csv data/processed/seg_cq500_cases.csv \
-  --fixed-train-count 35 \
-  --fixed-val-count 6 \
+  --fixed-train-count 34 \
+  --fixed-val-count 5 \
   --fixed-test-count 10
 
 MODEL_DIR="data/raw/hf/dinov3-vitb16-pretrain-lvd1689m"

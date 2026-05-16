@@ -45,8 +45,8 @@ python scripts/build_seg_cq500_slice_labels.py --seg-root data/raw/seg-cq500 --c
 python scripts/make_patient_split.py \
   --labels-csv data/processed/labels_matched.csv \
   --fixed-cases-csv data/processed/seg_cq500_cases.csv \
-  --fixed-train-count 35 \
-  --fixed-val-count 6 \
+  --fixed-train-count 34 \
+  --fixed-val-count 5 \
   --fixed-test-count 10
 ```
 
@@ -95,7 +95,7 @@ bash scripts/run_frozen_baseline_vast.sh
 ## Slice-Level Frozen Head
 
 Seg-CQ500 provides 3D hemorrhage segmentation masks for 51 CQ500 scans. The recommended split
-creation pins these labeled cases to `35 train / 6 val / 10 test` from the beginning. Build
+creation pins these labeled cases to `34 train / 5 val / 10 test` from the beginning. Build
 slice labels from those masks with:
 
 ```bash
