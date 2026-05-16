@@ -87,22 +87,27 @@ bash scripts/run_frozen_baseline_vast.sh
 
 ## Slice-Level Frozen Head
 
-If you have true slice-level hemorrhage labels, place them at:
+Seg-CQ500 provides 3D hemorrhage segmentation masks for 51 CQ500 scans. Build slice labels from
+those masks with:
+
+```bash
+python scripts/download_seg_cq500.py --unzip
+python scripts/build_seg_cq500_slice_labels.py \
+  --seg-root data/raw/seg-cq500 \
+  --index-csv data/processed/dicom_index_fast.csv \
+  --out-csv data/processed/slice_labels.csv
+```
+
+This creates:
 
 ```text
 data/processed/slice_labels.csv
 ```
 
-Expected columns:
+with columns:
 
 ```text
 case_id, hemorrhage, path
-```
-
-or:
-
-```text
-case_id, hemorrhage, instance_number
 ```
 
 Then run:

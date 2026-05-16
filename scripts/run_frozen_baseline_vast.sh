@@ -24,3 +24,11 @@ done
 
 python scripts/train_frozen_baseline.py --config configs/vast/frozen_baseline.yaml
 
+if [[ "${RUN_SEG_CQ500_SLICE_HEAD:-0}" == "1" ]]; then
+  python scripts/download_seg_cq500.py --unzip
+  python scripts/build_seg_cq500_slice_labels.py \
+    --seg-root data/raw/seg-cq500 \
+    --index-csv data/processed/dicom_index_fast.csv \
+    --out-csv data/processed/slice_labels.csv
+  python scripts/train_slice_head.py --config configs/vast/slice_head.yaml
+fi

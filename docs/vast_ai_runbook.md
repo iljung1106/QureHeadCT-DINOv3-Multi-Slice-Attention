@@ -49,13 +49,16 @@ python scripts/train_frozen_baseline.py --config configs/vast/frozen_baseline.ya
 
 ## Optional Slice-Level Evaluation
 
-For true slice-level hemorrhage labels, create:
+Seg-CQ500 provides 3D hemorrhage masks for 51 CQ500 scans. Convert those masks to binary
+slice-level hemorrhage labels:
 
-```text
-data/processed/slice_labels.csv
+```bash
+python scripts/download_seg_cq500.py --unzip
+python scripts/build_seg_cq500_slice_labels.py \
+  --seg-root data/raw/seg-cq500 \
+  --index-csv data/processed/dicom_index_fast.csv \
+  --out-csv data/processed/slice_labels.csv
 ```
-
-with `case_id`, `hemorrhage`, and either `path` or `instance_number`.
 
 Then run:
 
