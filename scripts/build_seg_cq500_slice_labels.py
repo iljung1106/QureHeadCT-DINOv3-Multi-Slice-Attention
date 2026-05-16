@@ -82,12 +82,31 @@ def main() -> None:
     parser.add_argument("--index-csv", default="data/processed/dicom_index_fast.csv")
     parser.add_argument("--out-csv", default="data/processed/slice_labels.csv")
     parser.add_argument("--report-json", default="data/reports/seg_cq500_slice_label_report.json")
+    parser.add_argument("--case-list-csv", default="data/processed/seg_cq500_cases.csv")
+    parser.add_argument("--case-list-only", action="store_true")
     args = parser.parse_args()
 
     seg_root = Path(args.seg_root)
     masks = find_mask_files(seg_root)
     if not masks:
         raise SystemExit(f"No mask files found under {seg_root}")
+    if args.case_list_only:
+        case_ids = []
+        unmatched = []
+        for mask_path in masks:
+            try:
+                case_ids.append(infer_case_id(mask_path))
+            except Exception as exc:
+                unmatched.append({"mask": str(mask_path), "reason": repr(exc)})
+        case_list_path = Path(args.case_list_csv)
+        case_list_path.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame({"case_id": sorted(set(case_ids))}).to_csv(case_list_path, index=False)
+        if unmatched:
+            report_path = Path(args.report_json)
+            report_path.parent.mkdir(parents=True, exist_ok=True)
+            report_path.write_text(json.dumps({"unmatched": unmatched}, indent=2), encoding="utf-8")
+        print(f"Seg-CQ500 cases: {case_list_path} ({len(set(case_ids))})")
+        return
     index = pd.read_csv(args.index_csv)
     index["case_id"] = index["case_id"].map(normalize_case_id)
 
@@ -139,10 +158,15 @@ def main() -> None:
     report_path = Path(args.report_json)
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    case_list_path = Path(args.case_list_csv)
+    case_list_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame({"case_id": sorted({item["case_id"] for item in report["matched"]})}).to_csv(
+        case_list_path, index=False
+    )
     print(f"Wrote {len(rows)} slice labels from {len(report['matched'])} masks to {out_csv}")
     print(f"Report: {report_path}")
+    print(f"Seg-CQ500 cases: {case_list_path}")
 
 
 if __name__ == "__main__":
     main()
-

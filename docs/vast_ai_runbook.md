@@ -38,7 +38,15 @@ python scripts/download_kaggle_dataset.py --unzip
 python scripts/normalize_labels.py --labels-csv data/raw/qureai-headct/reads.csv --id-column name
 python scripts/build_fast_path_index.py --dicom-root data/raw/qureai-headct --out-csv data/processed/dicom_index_fast.csv
 python scripts/filter_matched_labels.py
-python scripts/make_patient_split.py --labels-csv data/processed/labels_matched.csv --out-csv splits/cq500_seed42.csv
+python scripts/download_seg_cq500.py --unzip
+python scripts/build_seg_cq500_slice_labels.py --seg-root data/raw/seg-cq500 --case-list-only
+python scripts/make_patient_split.py \
+  --labels-csv data/processed/labels_matched.csv \
+  --out-csv splits/cq500_seed42.csv \
+  --fixed-cases-csv data/processed/seg_cq500_cases.csv \
+  --fixed-train-count 35 \
+  --fixed-val-count 6 \
+  --fixed-test-count 10
 
 python scripts/extract_dinov3_features.py --model data/raw/hf/dinov3-vitb16-pretrain-lvd1689m --index-csv data/processed/dicom_index_fast.csv --split-csv splits/cq500_seed42.csv --split train --batch-size 32
 python scripts/extract_dinov3_features.py --model data/raw/hf/dinov3-vitb16-pretrain-lvd1689m --index-csv data/processed/dicom_index_fast.csv --split-csv splits/cq500_seed42.csv --split val --batch-size 32
@@ -53,7 +61,6 @@ Seg-CQ500 provides 3D hemorrhage masks for 51 CQ500 scans. Convert those masks t
 slice-level hemorrhage labels:
 
 ```bash
-python scripts/download_seg_cq500.py --unzip
 python scripts/build_seg_cq500_slice_labels.py \
   --seg-root data/raw/seg-cq500 \
   --index-csv data/processed/dicom_index_fast.csv \

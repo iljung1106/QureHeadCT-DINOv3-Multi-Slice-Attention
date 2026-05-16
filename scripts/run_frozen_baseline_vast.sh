@@ -9,7 +9,15 @@ python scripts/download_kaggle_dataset.py --unzip
 python scripts/normalize_labels.py --labels-csv data/raw/qureai-headct/reads.csv --id-column name
 python scripts/build_fast_path_index.py --dicom-root data/raw/qureai-headct --out-csv data/processed/dicom_index_fast.csv
 python scripts/filter_matched_labels.py
-python scripts/make_patient_split.py --labels-csv data/processed/labels_matched.csv --out-csv splits/cq500_seed42.csv
+python scripts/download_seg_cq500.py --unzip
+python scripts/build_seg_cq500_slice_labels.py --seg-root data/raw/seg-cq500 --case-list-only
+python scripts/make_patient_split.py \
+  --labels-csv data/processed/labels_matched.csv \
+  --out-csv splits/cq500_seed42.csv \
+  --fixed-cases-csv data/processed/seg_cq500_cases.csv \
+  --fixed-train-count 35 \
+  --fixed-val-count 6 \
+  --fixed-test-count 10
 
 MODEL_DIR="data/raw/hf/dinov3-vitb16-pretrain-lvd1689m"
 for SPLIT in train val test; do
@@ -25,7 +33,6 @@ done
 python scripts/train_frozen_baseline.py --config configs/vast/frozen_baseline.yaml
 
 if [[ "${RUN_SEG_CQ500_SLICE_HEAD:-0}" == "1" ]]; then
-  python scripts/download_seg_cq500.py --unzip
   python scripts/build_seg_cq500_slice_labels.py \
     --seg-root data/raw/seg-cq500 \
     --index-csv data/processed/dicom_index_fast.csv \

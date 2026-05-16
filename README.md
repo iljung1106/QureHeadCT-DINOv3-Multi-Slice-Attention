@@ -40,7 +40,14 @@ Kaggle download requires accepted dataset terms and Kaggle API credentials.
 ```bash
 python scripts/build_fast_path_index.py --dicom-root data/raw/qureai-headct
 python scripts/normalize_labels.py --labels-csv path/to/label_file.csv --id-column PatientID
-python scripts/make_patient_split.py
+python scripts/download_seg_cq500.py --unzip
+python scripts/build_seg_cq500_slice_labels.py --seg-root data/raw/seg-cq500 --case-list-only
+python scripts/make_patient_split.py \
+  --labels-csv data/processed/labels_matched.csv \
+  --fixed-cases-csv data/processed/seg_cq500_cases.csv \
+  --fixed-train-count 35 \
+  --fixed-val-count 6 \
+  --fixed-test-count 10
 ```
 
 The split file is case-level and is saved to `splits/cq500_seed42.csv`.
@@ -87,11 +94,11 @@ bash scripts/run_frozen_baseline_vast.sh
 
 ## Slice-Level Frozen Head
 
-Seg-CQ500 provides 3D hemorrhage segmentation masks for 51 CQ500 scans. Build slice labels from
-those masks with:
+Seg-CQ500 provides 3D hemorrhage segmentation masks for 51 CQ500 scans. The recommended split
+creation pins these labeled cases to `35 train / 6 val / 10 test` from the beginning. Build
+slice labels from those masks with:
 
 ```bash
-python scripts/download_seg_cq500.py --unzip
 python scripts/build_seg_cq500_slice_labels.py \
   --seg-root data/raw/seg-cq500 \
   --index-csv data/processed/dicom_index_fast.csv \
