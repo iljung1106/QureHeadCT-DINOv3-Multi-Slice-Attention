@@ -47,9 +47,30 @@ python scripts/extract_dinov3_features.py --model data/raw/hf/dinov3-vitb16-pret
 python scripts/train_frozen_baseline.py --config configs/vast/frozen_baseline.yaml
 ```
 
+## Optional Slice-Level Evaluation
+
+For true slice-level hemorrhage labels, create:
+
+```text
+data/processed/slice_labels.csv
+```
+
+with `case_id`, `hemorrhage`, and either `path` or `instance_number`.
+
+Then run:
+
+```bash
+python scripts/train_slice_head.py --config configs/vast/slice_head.yaml
+```
+
+Outputs:
+
+- `data/models/slice_hemorrhage_head/best.pt`
+- `data/models/slice_hemorrhage_head/metrics.json`
+- `data/models/slice_hemorrhage_head/test_slice_predictions.csv`
+
 ## Notes
 
 - If VRAM is low, reduce feature extraction `--batch-size` to 8 or 16.
 - Frozen baseline training uses cached features and is much cheaper than DINOv3 feature extraction.
 - The current baseline is scan-level only. LoRA and slice-level auxiliary training should be added as a second notebook after the frozen baseline is reproducible.
-

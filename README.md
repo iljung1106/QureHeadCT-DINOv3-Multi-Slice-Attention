@@ -84,3 +84,32 @@ The one-command shell equivalent is:
 ```bash
 bash scripts/run_frozen_baseline_vast.sh
 ```
+
+## Slice-Level Frozen Head
+
+If you have true slice-level hemorrhage labels, place them at:
+
+```text
+data/processed/slice_labels.csv
+```
+
+Expected columns:
+
+```text
+case_id, hemorrhage, path
+```
+
+or:
+
+```text
+case_id, hemorrhage, instance_number
+```
+
+Then run:
+
+```bash
+python scripts/train_slice_head.py --config configs/vast/slice_head.yaml
+```
+
+This trains only a small binary head on cached frozen DINOv3 slice features. It does not train
+DINOv3 and it is independent of the BiGRU-GatedABMIL scan classifier.

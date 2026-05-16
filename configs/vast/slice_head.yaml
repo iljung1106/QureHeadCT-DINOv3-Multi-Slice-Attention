@@ -1,0 +1,24 @@
+seed: 42
+paths:
+  feature_dir: data/features/dinov3_vitb16
+  split_csv: splits/cq500_seed42.csv
+  slice_labels_csv: data/processed/slice_labels.csv
+  output_dir: data/models/slice_hemorrhage_head
+data:
+  case_col: case_id
+  label_col: hemorrhage
+  path_col: path
+  instance_col: instance_number
+model:
+  feature_dim: 768
+  hidden_dim: 0
+  dropout: 0.1
+training:
+  epochs: 30
+  batch_size: 4096
+  lr: 0.0005
+  weight_decay: 0.00001
+  patience: 5
+  num_workers: 2
+  use_pos_weight: true
+
